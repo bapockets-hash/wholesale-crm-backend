@@ -456,10 +456,21 @@ def get_lead(lead_id: str):
     return row_to_dict(row)
 
 
+LEAD_WRITABLE_COLS = {
+    "date_found", "lead_type", "property_address", "property_city", "property_state",
+    "property_zip", "estimated_value", "value_source", "owner_name",
+    "owner_mailing_address", "owner_mailing_city", "owner_mailing_state",
+    "owner_mailing_zip", "source_url", "source_site", "parcel_number",
+    "days_delinquent", "notes", "skip_traced", "score",
+}
+
 @app.patch("/api/leads/{lead_id}")
 def update_lead(lead_id: str, body: Dict[str, Any]):
     if not body:
         raise HTTPException(status_code=400, detail="Empty body")
+    bad = [k for k in body if k not in LEAD_WRITABLE_COLS]
+    if bad:
+        raise HTTPException(status_code=400, detail=f"Invalid fields: {bad}")
     cols = ", ".join(f"{k}=?" for k in body)
     vals = list(body.values()) + [lead_id]
     with get_db() as conn:
@@ -498,10 +509,24 @@ def get_deal(deal_id: str):
     return row_to_dict(row)
 
 
+DEAL_WRITABLE_COLS = {
+    "property_address", "seller_name", "seller_email", "seller_phone",
+    "buyer_name", "buyer_email", "buyer_phone",
+    "title_company_name", "title_company_contact", "title_company_email", "title_company_phone",
+    "contract_price", "buyers_price", "assignment_fee", "estimated_closing_costs", "expected_net_profit",
+    "contract_execution_date", "emd_due_date", "emd_received_date",
+    "title_ordered_date", "title_clear_date", "assignment_signed_date",
+    "scheduled_closing_date", "actual_closing_date", "current_status",
+    "days_to_close", "title_issues", "missing_documents", "closing_notes", "last_updated",
+}
+
 @app.patch("/api/deals/{deal_id}")
 def update_deal(deal_id: str, body: Dict[str, Any]):
     if not body:
         raise HTTPException(status_code=400, detail="Empty body")
+    bad = [k for k in body if k not in DEAL_WRITABLE_COLS]
+    if bad:
+        raise HTTPException(status_code=400, detail=f"Invalid fields: {bad}")
     body["last_updated"] = date.today().isoformat()
     cols = ", ".join(f"{k}=?" for k in body)
     vals = list(body.values()) + [deal_id]
@@ -765,6 +790,9 @@ def pnl(period: Optional[str] = Query("all")):
 
     if cutoff:
         def in_period(d):
+            # Active (non-closed) deals always included regardless of period
+            if d.get("current_status") != "CLOSED":
+                return True
             cd = d.get("actual_closing_date") or d.get("contract_execution_date") or ""
             return cd >= cutoff
         all_deals = [d for d in all_deals if in_period(d)]
@@ -839,9 +867,20 @@ def pnl(period: Optional[str] = Query("all")):
 
 
 # ---------------------------------------------------------------------------
+# BUYERS endpoint
+# ---------------------------------------------------------------------------
+
+@app.get("/api/buyers")
+def list_buyers():
+    buyers_path = os.getenv("CSV_BUYERS", "../../data/buyers.csv")
+    rows = _read_csv(buyers_path)
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
 
 @app.get("/")
 def root():
-    return {"status": "ok", "service": "Wholesale CRM API"}
+    return {"status": "ok", "service": "Any Property CRM API"}
