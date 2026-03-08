@@ -740,6 +740,105 @@ def action_queue():
 
 
 # ---------------------------------------------------------------------------
+# P&L endpoint
+# ---------------------------------------------------------------------------
+
+@app.get("/api/pnl")
+def pnl(period: Optional[str] = Query("all")):
+    """
+    Returns profit & loss data broken down by month and deal.
+    period: 'all' | 'ytd' | '90d' | '30d'
+    """
+    from datetime import timedelta
+    today_dt = date.today()
+
+    cutoff = None
+    if period == "ytd":
+        cutoff = date(today_dt.year, 1, 1).isoformat()
+    elif period == "90d":
+        cutoff = (today_dt - timedelta(days=90)).isoformat()
+    elif period == "30d":
+        cutoff = (today_dt - timedelta(days=30)).isoformat()
+
+    with get_db() as conn:
+        all_deals = [dict(d) for d in conn.execute("SELECT * FROM deals").fetchall()]
+
+    if cutoff:
+        def in_period(d):
+            cd = d.get("actual_closing_date") or d.get("contract_execution_date") or ""
+            return cd >= cutoff
+        all_deals = [d for d in all_deals if in_period(d)]
+
+    closed = [d for d in all_deals if d.get("current_status") == "CLOSED"]
+    active = [d for d in all_deals if d.get("current_status") != "CLOSED"]
+
+    gross_revenue = sum(d.get("assignment_fee") or 0 for d in closed)
+    total_closing_costs = sum(d.get("estimated_closing_costs") or 0 for d in closed)
+    net_profit = sum(d.get("expected_net_profit") or 0 for d in closed)
+    projected_revenue = sum(d.get("assignment_fee") or 0 for d in active)
+    projected_net = sum(d.get("expected_net_profit") or 0 for d in active)
+    avg_assignment = (gross_revenue / len(closed)) if closed else 0
+    days_vals = [d.get("days_to_close") for d in closed if d.get("days_to_close")]
+    avg_days = round(sum(days_vals) / len(days_vals), 1) if days_vals else None
+
+    monthly = {}
+    for d in all_deals:
+        close_date = d.get("actual_closing_date") or d.get("contract_execution_date") or ""
+        if not close_date:
+            continue
+        month_key = close_date[:7]
+        if month_key not in monthly:
+            monthly[month_key] = {"month": month_key, "closed_deals": 0, "gross_revenue": 0.0, "closing_costs": 0.0, "net_profit": 0.0}
+        if d.get("current_status") == "CLOSED":
+            monthly[month_key]["closed_deals"] += 1
+            monthly[month_key]["gross_revenue"] += d.get("assignment_fee") or 0
+            monthly[month_key]["closing_costs"] += d.get("estimated_closing_costs") or 0
+            monthly[month_key]["net_profit"] += d.get("expected_net_profit") or 0
+
+    monthly_list = sorted(monthly.values(), key=lambda x: x["month"])
+    for m in monthly_list:
+        m["gross_revenue"] = round(m["gross_revenue"], 2)
+        m["closing_costs"] = round(m["closing_costs"], 2)
+        m["net_profit"] = round(m["net_profit"], 2)
+
+    deal_rows = []
+    for d in all_deals:
+        deal_rows.append({
+            "deal_id": d.get("deal_id"),
+            "property_address": d.get("property_address"),
+            "status": d.get("current_status"),
+            "contract_price": d.get("contract_price"),
+            "buyers_price": d.get("buyers_price"),
+            "assignment_fee": d.get("assignment_fee"),
+            "estimated_closing_costs": d.get("estimated_closing_costs"),
+            "expected_net_profit": d.get("expected_net_profit"),
+            "actual_closing_date": d.get("actual_closing_date"),
+            "scheduled_closing_date": d.get("scheduled_closing_date"),
+            "days_to_close": d.get("days_to_close"),
+            "seller_name": d.get("seller_name"),
+            "buyer_name": d.get("buyer_name"),
+        })
+    deal_rows.sort(key=lambda x: (x["actual_closing_date"] or x["scheduled_closing_date"] or ""), reverse=True)
+
+    return {
+        "summary": {
+            "closed_deals": len(closed),
+            "active_deals": len(active),
+            "gross_revenue": round(gross_revenue, 2),
+            "total_closing_costs": round(total_closing_costs, 2),
+            "net_profit": round(net_profit, 2),
+            "projected_revenue": round(projected_revenue, 2),
+            "projected_net": round(projected_net, 2),
+            "avg_assignment_fee": round(avg_assignment, 2),
+            "avg_days_to_close": avg_days,
+            "margin_pct": round((net_profit / gross_revenue * 100), 1) if gross_revenue else 0,
+        },
+        "monthly": monthly_list,
+        "deals": deal_rows,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
 
