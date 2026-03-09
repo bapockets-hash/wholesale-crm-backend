@@ -1,0 +1,2 @@
+lead_id,seller_name,phone,email,address,ARV,MAO,last_contact_date,last_outcome,follow_up_date,status,notes,last_auto_message_date,appointment_time
+TEST-001,Pockets D,15592508799,bapockets@gmail.com,123 Test Property Lane Fresno CA 93701,,,2026-03-08,day1_initial,2026-03-11,contacted,Seeded from outreach_log,2026-03-08,
