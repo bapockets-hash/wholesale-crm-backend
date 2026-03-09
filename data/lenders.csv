@@ -1,0 +1,6 @@
+lender_id,lender_name,contact_name,email,phone,website,loan_type,max_loan_amount,fee_percent,funding_days,states_served,notes
+L001,Easy IRA Lending,Mike Torres,mike@easyiralending.com,602-555-0191,easyiralending.com,Transactional / Double Close,500000,1.5,1,Nationwide,Same-day POF letters available. Email request with deal address and close date.
+L002,Coastal Transactional Funding,Sara Kim,sara@coastaltf.com,813-555-0247,coastaltransactionalfunding.com,Transactional / Double Close,750000,1.0,1,FL;GA;TX;NC;SC,24-hour turnaround on POF. Requires executed A-B contract before funding.
+L003,Fund That Flip,Client Services,info@fundthatflip.com,888-555-0312,fundthatflip.com,Transactional / Bridge,2000000,2.0,3,Nationwide,Good for larger deals. Online portal for POF requests. 72-hour funding on double closes.
+L004,Sherman Bridge Lending,Loan Desk,loans@shermanbridge.com,972-555-0158,shermanbridge.com,Transactional / Hard Money,1000000,1.75,2,TX;OK;AR;LA;TN,Fast POF letters. Requires deal summary sheet. Specializes in TX market.
+L005,Groundfloor Finance,Support,support@groundfloor.us,404-555-0275,groundfloor.us,Transactional / Double Close,500000,1.25,1,Nationwide,Crowdfunded transactional lender. POF available within hours of request. Good for sub-$500k deals.
