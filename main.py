@@ -16,7 +16,7 @@ from pydantic import BaseModel
 # ---------------------------------------------------------------------------
 # Config — CSV paths via env vars
 # ---------------------------------------------------------------------------
-BASE = os.getenv("DATA_DIR", "/data")
+BASE = os.getenv("DATA_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
 
 def csv_path(name: str, default: str) -> str:
     return os.getenv(f"CSV_{name.upper()}", os.path.join(BASE, default))
