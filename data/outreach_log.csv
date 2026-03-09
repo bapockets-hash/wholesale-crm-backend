@@ -1,0 +1,19 @@
+lead_id,name,address,email,phone,channel,message_type,sent_at,status,notes
+TEST-001,Pockets D,123 Test Property Lane Fresno CA 93701,bapockets@gmail.com,+15592508799,email,day1_initial,2026-03-08T12:05:00-07:00,delivered,Gmail sent successfully - subject: Quick question about your property on Test Property Lane
+TEST-001,Pockets D,123 Test Property Lane Fresno CA 93701,bapockets@gmail.com,+15592508799,sms,day1_initial,2026-03-08T12:05:00-07:00,failed,Twilio API returned HTTP 401 - credentials require re-configuration
+b1a2c3d4-0001-4e5f-a6b7-c8d9e0f10001,LEAP Properties,,,( 832) 554-4775,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Houston TX - SFR Commercial Land - Cash buyer verified listing
+b1a2c3d4-0002-4e5f-a6b7-c8d9e0f10002,PRYME Home Solutions,,,( 210) 807-7071,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - San Antonio TX - SFR MFR Commercial Land - 5-star verified
+b1a2c3d4-0003-4e5f-a6b7-c8d9e0f10003,Absolute Properties,,,( 713) 230-8059,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Sugar Land TX - SFR Land - Houston area as-is buyer
+b1a2c3d4-0004-4e5f-a6b7-c8d9e0f10004,Alamo City Assets LLC,,,( 210) 802-8066,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - San Antonio TX - SFR MFR Land - Distressed specialist
+b1a2c3d4-0005-4e5f-a6b7-c8d9e0f10005,Americas House Buyer,,,( 800) 300-4289,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Fort Worth TX - SFR MFR Commercial - Nationwide buyer strong in DFW
+b1a2c3d4-0006-4e5f-a6b7-c8d9e0f10006,Danny Buys Houses,,,( 210) 881-7707,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - San Antonio TX - SFR - Top-rated local buyer
+b1a2c3d4-0007-4e5f-a6b7-c8d9e0f10007,DFW Fast Home Buyers,,,( 817) 476-0510,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Fort Worth TX - SFR MFR Land - Local DFW cash buyer
+b1a2c3d4-0008-4e5f-a6b7-c8d9e0f10008,Fairway Home Buyers,,,( 409) 228-4433,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Kountze TX - SFR MFR - SE Texas Golden Triangle area
+b1a2c3d4-0009-4e5f-a6b7-c8d9e0f10009,JLR Homebuyers,,,( 512) 598-6726,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Austin TX - SFR MFR - Veteran-owned local buyer
+b1a2c3d4-0010-4e5f-a6b7-c8d9e0f10010,Jesse Buys Houses DFW,,,( 214) 888-8068,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Dallas TX - SFR MFR - Family-owned DFW buyer
+b1a2c3d4-0011-4e5f-a6b7-c8d9e0f10011,Jamie Buys Houses,,,( 972) 318-9500,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: TrustedREI - Sachse TX - SFR MFR - Covers all DFW and Fort Worth
+b1a2c3d4-0012-4e5f-a6b7-c8d9e0f10012,Christopher Wilson,,,( 817) 000-0000,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: BiggerPockets - Fort Worth TX - SFR - Active deal seeker DFW markets
+b1a2c3d4-0013-4e5f-a6b7-c8d9e0f10013,JH Bay Home Buyers,,,( 727) 273-7691,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: Craigslist/ListWithClever - Tampa FL - SFR - Top 1% active buyer in FL
+b1a2c3d4-0014-4e5f-a6b7-c8d9e0f10014,Flipping 813,,,( 813) 683-4872,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: Facebook Group - Tampa FL - SFR MFR - Experienced fix-flip buyer
+b1a2c3d4-0015-4e5f-a6b7-c8d9e0f10015,TurnKey Headquarters,,,( 407) 900-5790,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: REIA - Orlando FL - SFR - Family-run group active since 2001
+b1a2c3d4-0016-4e5f-a6b7-c8d9e0f10016,Marko Leci,,marko@jaxhomebuyers.com,( 904) 888-7606,buyer_sourced,new_buyer,2026-03-09T07:03:00-07:00,added,Source: BiggerPockets - Jacksonville FL - SFR - Active Feb 2026 verified email
