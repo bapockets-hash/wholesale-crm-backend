@@ -1,0 +1,3 @@
+timestamp,channel,sender_name,sender_contact,subject_or_msg,reply_snippet,intent_score,action_taken,crm_updated
+2026-03-08 19:15:26 UTC,Gmail,N/A,N/A,Scheduled poll - no seller replies found,,N/A,No action required,No
+2026-03-08 19:17:22 UTC,Gmail,N/A,N/A,Scheduled poll - no seller replies found,,N/A,No action required,No
