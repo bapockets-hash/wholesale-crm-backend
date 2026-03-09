@@ -1,0 +1,2 @@
+wholesaler_id,name,email,phone,company,markets_served,specialty,tier,deals_closed_with_us,avg_response_hours,last_contact_date,notes
+WS-001,placeholder_name,placeholder@email.com,555-000-0001,Placeholder Wholesaling Co,"TX,FL,GA",single_family,A,0,24,2026-03-08,seed record - replace with real JV contact
