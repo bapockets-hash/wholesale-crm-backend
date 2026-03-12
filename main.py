@@ -506,6 +506,100 @@ def pnl(period: Optional[str] = Query("all")):
     }
 
 # ---------------------------------------------------------------------------
+# INBOUND WEBSITE LEADS  (seller form on anyproperty.vercel.app)
+# ---------------------------------------------------------------------------
+
+CRM_FIELDNAMES = [
+    "id", "name", "property_address", "phone", "email", "condition",
+    "source", "lead_type", "status", "score", "notes",
+    "created_at", "follow_up_date", "last_contacted",
+]
+
+@app.post("/api/inbound-lead", status_code=201)
+def inbound_lead(body: Dict[str, Any]):
+    import uuid, httpx as _httpx
+    rows = read_csv("crm", "crm.csv")
+    lead_id = f"WEB-{uuid.uuid4().hex[:8].upper()}"
+    today = date.today().isoformat()
+    new_row = {
+        "id": lead_id,
+        "name": body.get("name", ""),
+        "property_address": body.get("property_address", ""),
+        "phone": body.get("phone", ""),
+        "email": body.get("email", ""),
+        "condition": body.get("condition", ""),
+        "source": body.get("source", "website_seller_form"),
+        "lead_type": body.get("lead_type", "inbound_website"),
+        "status": "new",
+        "score": "",
+        "notes": f"Inbound from website — condition: {body.get('condition', 'not specified')}",
+        "created_at": today,
+        "follow_up_date": today,
+        "last_contacted": "",
+    }
+    rows.append(new_row)
+    existing_fields = list(rows[0].keys()) if rows else CRM_FIELDNAMES
+    write_csv("crm", "crm.csv", rows, existing_fields)
+
+    # Fire-and-forget Telegram alert
+    tg_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    tg_chat  = os.getenv("TELEGRAM_CHAT_ID", "")
+    if tg_token and tg_chat:
+        msg = (
+            f"NEW WEBSITE LEAD\n"
+            f"Name: {new_row['name']}\n"
+            f"Address: {new_row['property_address']}\n"
+            f"Phone: {new_row['phone']}\n"
+            f"Email: {new_row['email'] or 'N/A'}\n"
+            f"Condition: {new_row['condition'] or 'Not specified'}\n"
+            f"Lead ID: {lead_id}"
+        )
+        try:
+            _httpx.post(
+                f"https://api.telegram.org/bot{tg_token}/sendMessage",
+                json={"chat_id": tg_chat, "text": msg},
+                timeout=5,
+            )
+        except Exception:
+            pass
+
+    return {"lead_id": lead_id, "ok": True}
+
+
+# ---------------------------------------------------------------------------
+# BUYERS  (POST — buyer form on anyproperty.vercel.app)
+# ---------------------------------------------------------------------------
+
+BUYERS_FIELDNAMES = [
+    "buyer_id", "name", "email", "phone", "markets",
+    "price_range", "property_type", "source", "tier", "created_at",
+]
+
+@app.post("/api/buyers", status_code=201)
+def create_buyer(body: Dict[str, Any]):
+    import uuid
+    rows = read_csv("buyers", "buyers.csv")
+    buyer_id = f"BUY-{uuid.uuid4().hex[:8].upper()}"
+    today = date.today().isoformat()
+    new_row = {
+        "buyer_id": buyer_id,
+        "name": body.get("name", ""),
+        "email": body.get("email", ""),
+        "phone": body.get("phone", ""),
+        "markets": body.get("markets", ""),
+        "price_range": body.get("price_range", ""),
+        "property_type": body.get("property_type", ""),
+        "source": body.get("source", "website_buyer_form"),
+        "tier": body.get("tier", "B"),
+        "created_at": today,
+    }
+    rows.append(new_row)
+    existing_fields = list(rows[0].keys()) if rows else BUYERS_FIELDNAMES
+    write_csv("buyers", "buyers.csv", rows, existing_fields)
+    return {"buyer_id": buyer_id, "ok": True}
+
+
+# ---------------------------------------------------------------------------
 # Health
 # ---------------------------------------------------------------------------
 
